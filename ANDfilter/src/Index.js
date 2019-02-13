@@ -51,7 +51,6 @@
      return selectedCandidates;
     }
 
-
     const candidatesTable = document.getElementById("candidates_example");
     const newCandidatesTable = candidatesTable.cloneNode(true);
 
