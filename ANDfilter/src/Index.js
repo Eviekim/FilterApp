@@ -51,13 +51,40 @@
      return selectedCandidates;
     }
 
-    const candidatesTable = document.getElementById("candidates_example");
-    const newCandidatesTable = candidatesTable.cloneNode(true);
+    function tableExisted() {
+      return !!document.getElementById('filteredTable');
+    }
 
-    removeRowsFromTable(newCandidatesTable);
-    const newTbody = newCandidatesTable.getElementsByTagName('tbody')[0];
+    function removeExistingTable() {
+      if (tableExisted()) {
+        document.getElementById('filteredTable').remove();
+      };
+    }
 
-    const filteredCandidates = filterCandidateBySkill(newCandidates, 'JavaScript')
-    addCandidatesToTable(newTbody, filteredCandidates)
+    function cloneTable() {
+      const candidatesTable = document.getElementById('candidates_example');
+      const newCandidatesTable = candidatesTable.cloneNode(true);
+      newCandidatesTable.id = 'filteredTable';
 
-    document.body.appendChild(newCandidatesTable);
+      return newCandidatesTable;
+    }
+
+    function generateFilteredTBody(candidates, skill, table) {
+      const newTableBody = table.getElementsByTagName('tbody')[0];
+      const filteredCandidates = filterCandidateBySkill(candidates, skill);
+      addCandidatesToTable(newTableBody, filteredCandidates);
+    }
+
+    function renderFilteredTable(candidates, skill) {
+      const newTable = cloneTable();
+      removeRowsFromTable(newTable);
+      generateFilteredTBody(candidates, skill, newTable);
+      document.body.appendChild(newTable);
+    }
+
+    const skillList = document.getElementById('list');
+    skillList.addEventListener('change', () => {
+      removeExistingTable();
+      const selectedSkill = skillList.options[skillList.selectedIndex].value;
+      renderFilteredTable(newCandidates, selectedSkill);
+    });
